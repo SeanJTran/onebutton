@@ -27,11 +27,8 @@ pp
  rlrrl
  rllll
    lr
-
-
 `,
   `
-
  l ll
  rlrrl
  rllll
