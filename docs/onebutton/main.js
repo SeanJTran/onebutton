@@ -8,38 +8,70 @@ description = `
 `;
 
 characters = [
+//fish 1
+  ` 
+ cc   
+pppc
+pcp 
+pppc
+ c  
+
+
+`, //fish 2
   `
- rr
- rr
-yrry
-yrry
-y  y
-y  y
+ gg   
+rrrg
+rgr 
+rrrg
+ g  
+
+ 
+`, //submarine clicked
+  ` 
+   yy 
+   y  
+y yyyy
+ yyyrr
+ yyyrr
+y yyyy
+`, //submarine not clicked
+  `
+   yy 
+   y  
+y yyyy
+ yyybb
+ yyybb
+y yyyy
 `,
-  `
- bbbb
-bbbbbb
- bbbb
- r  r
-r    r
-`,
-  `
-pp 
- l ll
- rlrrl
- rllll
-   lr
-`,
-  `
- l ll
- rlrrl
- rllll
- l lr
-pp
-`,
-  `
+  ` 
 l l
-`,
+`, //fish 3
+`
+ pp   
+gggp
+gpg 
+gggp
+ p  
+
+
+`, //fish 4
+`
+ cc   
+rrrc
+rcr 
+rrrc
+ c  
+
+
+`, // net
+`
+   lll
+ ll
+l
+l
+ ll
+   lll
+`
 ];
 
 options = {
@@ -161,7 +193,7 @@ function update() {
     play("explosion");
     end();
   }
-  color("red");
+  color("blue");
   particle(ship.pos.x - 2, ship.pos.y, 0.5, 0.5, PI, PI / 5);
   // remove(shots, (s) => {
   //   s.x += 2 * sqrt(difficulty);
@@ -170,7 +202,7 @@ function update() {
   //   }
   //   return s.x > 103;
   // });
-  color("cyan");
+  color("blue");
   remove(bombs, (b) => {
     b.vel.y += 0.1 * difficulty;
     b.vel.mul(0.9);
