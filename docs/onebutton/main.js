@@ -65,11 +65,15 @@ let ship;
 //let shots;
 /** @type {{pos: Vector, vel: Vector}[]} */
 let bombs;
+let bullets;
+let nextBulletDist;
 //let fuel;
 let multiplier;
 
 function update() {
-  if (!ticks) {
+    if (!ticks) {
+        bullets = [];
+        nextBulletDist = 10;
     // walls = times(11, (i) => {
     //   return { x: i * 10, height: 10 };
     // });
@@ -92,7 +96,8 @@ function update() {
     bombs = [];
     // fuel = 50;
     // multiplier = 1;
-  }
+    }
+
   const scr = difficulty * 0.3;
   /** @type {Color} */
   // @ts-ignore
@@ -218,7 +223,24 @@ function update() {
   //   }
   //   return t.x < -3;
   // });
-  color("transparent");
+    color("transparent");
+    nextBulletDist -= scr;
+    if (nextBulletDist < 0) {
+        for (let i = 0; i < 4; i++) {
+            bullets.push({ pos: vec(203, rndi(10, 90)), vx: rnd(1, difficulty) * 0.3 });
+            nextBulletDist = rnd(50, 80) / sqrt(difficulty);
+        }
+    }
+    color("black");
+    remove(bullets, (b) => {
+        b.pos.x -= b.vx + scr;
+        const c = char("d", b.pos).isColliding.char;
+        if (c.a || c.b) {
+            play("explosion");
+            return true;
+        }
+        return b.pos.x < -3;
+    });
   // remove(shots, (s) => {
   //   const c = char("e", s).isColliding.char;
   //   return c.a || c.b;
