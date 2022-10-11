@@ -97,15 +97,17 @@ let ship;
 //let shots;
 /** @type {{pos: Vector, vel: Vector}[]} */
 let bombs;
-let bullets;
-let nextBulletDist;
+let fish;
+let nextfishDist;
 //let fuel;
+//let colors
 let multiplier;
+//let mis = ["a", "b", "e", "f"]
 
 function update() {
     if (!ticks) {
-        bullets = [];
-        nextBulletDist = 10;
+        fish = [];
+        nextfishDist = 10;
     // walls = times(11, (i) => {
     //   return { x: i * 10, height: 10 };
     // });
@@ -129,7 +131,8 @@ function update() {
     // fuel = 50;
     // multiplier = 1;
     }
-
+    //const ran = Math.floor(Math.random() * 4);
+    //colors = mis[ran]
   const scr = difficulty * 0.3;
   /** @type {Color} */
   // @ts-ignore
@@ -171,7 +174,7 @@ function update() {
     rect(w.x, 90 - w.height, 9, w.height);
     rect(w.x, 0, 9, 5);
   });
-  color("black");
+    color("black");
   if (input.isJustPressed) {
     //play(fuel > 0 ? "laser" : "hit");
     //ship.vy -= difficulty * (fuel > 0 ? 0.5 : 0.1);
@@ -256,17 +259,17 @@ function update() {
   //   return t.x < -3;
   // });
     color("transparent");
-    nextBulletDist -= scr;
-    if (nextBulletDist < 0) {
+    nextfishDist -= scr;
+    if (nextfishDist < 0) {
         for (let i = 0; i < 4; i++) {
-            bullets.push({ pos: vec(203, rndi(10, 90)), vx: rnd(1, difficulty) * 0.3 });
-            nextBulletDist = rnd(50, 80) / sqrt(difficulty);
+            fish.push({ pos: vec(203, rndi(10, 90)), vx: rnd(1, difficulty) * 0.3 });
+            nextfishDist = rnd(50, 80) / sqrt(difficulty);
         }
     }
     color("black");
-    remove(bullets, (b) => {
+    remove(fish, (b) => {
         b.pos.x -= b.vx + scr;
-        const c = char("d", b.pos).isColliding.char;
+        const c = char("a", b.pos).isColliding.char;
         if (c.a || c.b) {
             play("explosion");
             return true;
