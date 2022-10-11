@@ -1,5 +1,3 @@
-//testing push again - Leon 
-
 title = " Water Fishing";
 
 description = `
@@ -77,7 +75,7 @@ l
 options = {
   theme: "pixel",
   //turned off background music for now since it's too loud
-  //isPlayingBgm: true,
+  isPlayingBgm: true,
   isReplayEnabled: true,
   seed: 3000,
 };
@@ -96,18 +94,19 @@ let ship;
 /** @type {Vector[]} */
 //let shots;
 /** @type {{pos: Vector, vel: Vector}[]} */
+//the net
 let bombs;
+//the fish
 let fish;
+//distance of fish
 let nextfishDist;
-//let fuel;
+// let fuel;
 //let colors
 let multiplier;
 //let mis = ["a", "b", "e", "f"]
 
 function update() {
     if (!ticks) {
-        fish = [];
-        nextfishDist = 10;
     // walls = times(11, (i) => {
     //   return { x: i * 10, height: 10 };
     // });
@@ -121,15 +120,16 @@ function update() {
     wallHeight = 10;
     //the iteration between the walls
     wallHeightVel = 0;
-    // missiles = [];
-    // tanks = [];
-    // nextTankDist = 10;
+
     //position of the ship on the map
     ship = { pos: vec(10, 50), vy: 0 };
-    //shots = [];
+    //the fish
+    fish = [];
+    nextfishDist = 10;
+
     bombs = [];
     // fuel = 50;
-    // multiplier = 1;
+    multiplier = 1;
     }
     //const ran = Math.floor(Math.random() * 4);
     //colors = mis[ran]
@@ -156,17 +156,7 @@ function update() {
         wallHeightVel = rnd() < 0.5 ? -10 : -5;
       }
       w.height = wallHeight;
-      // nextTankDist--;
-      // if (nextTankDist < 0) {
-      //   tanks.push(vec(w.x + 5, 90 - w.height - 3));
-      //   nextTankDist = rnd(1, 16);
-      // } else if (rnd() < 0.5) {
-        // missiles.push({
-        //   pos: vec(w.x + 5, 90 - w.height - 3),
-        //   launchTicks:
-        //     rnd() < 0.5 / sqrt(difficulty) ? 9999 : rnd(200, 300) / difficulty,
-        // });
-      // }
+
     }
     //drawing ou the shape of the walls
     // rect(w.x, 90 - w.height, 9, w.height);
@@ -176,11 +166,10 @@ function update() {
   });
     color("black");
   if (input.isJustPressed) {
-    //play(fuel > 0 ? "laser" : "hit");
-    //ship.vy -= difficulty * (fuel > 0 ? 0.5 : 0.1);
+
     //how high the ship will go when pressed
     ship.vy -= difficulty * 0.5;
-    //shots.push(vec(ship.pos));
+
     //bombs.push({ pos: vec(ship.pos), vel: vec(2 * sqrt(difficulty), 0) });
     //changes of how far the bullet travels as well as the curve going of it going down
     bombs.push({ pos: vec(ship.pos), vel: vec(5 * sqrt(2.5), 0.5) });
@@ -198,13 +187,7 @@ function update() {
   }
   color("blue");
   particle(ship.pos.x - 2, ship.pos.y, 0.5, 0.5, PI, PI / 5);
-  // remove(shots, (s) => {
-  //   s.x += 2 * sqrt(difficulty);
-  //   if (char("e", s).isColliding.rect[wallColor]) {
-  //     return true;
-  //   }
-  //   return s.x > 103;
-  // });
+
   color("blue");
   remove(bombs, (b) => {
     b.vel.y += 0.1 * difficulty;
@@ -214,50 +197,7 @@ function update() {
       return true;
     }
   });
-  // remove(missiles, (m) => {
-  //   m.pos.x -= scr;
-  //   m.launchTicks--;
-  //   if (m.launchTicks < 0) {
-  //     m.pos.y -= difficulty * 0.5;
-  //   }
-  //   color("black");
-  //   const c = char("a", m.pos).isColliding;
-  //   if (c.char.e || c.rect.cyan) {
-  //     play("hit");
-  //     color("red");
-  //     particle(m.pos);
-  //     addScore(multiplier, m.pos);
-  //     multiplier++;
-  //     return true;
-  //   }
-  //   if (c.char.c || c.char.d) {
-  //     play("explosion");
-  //     end();
-  //   }
-  //   if (m.pos.x < -3 || m.pos.y < -3) {
-  //     if (multiplier > 1) {
-  //       multiplier--;
-  //     }
-  //     return true;
-  //   }
-  // });
-  color("black");
-  // remove(tanks, (t) => {
-  //   t.x -= scr;
-  //   const c = char("b", t).isColliding;
-  //   if (c.char.e || c.rect.cyan) {
-  //     play("powerUp");
-  //     color("blue");
-  //     particle(t);
-  //     fuel = clamp(fuel + 10, 0, 50);
-  //     return true;
-  //   }
-  //   if (c.char.c || c.char.d) {
-  //     play("explosion");
-  //     end();
-  //   }
-  //   return t.x < -3;
-  // });
+
     color("transparent");
     nextfishDist -= scr;
     if (nextfishDist < 0) {
@@ -267,27 +207,35 @@ function update() {
         }
     }
     color("black");
-    remove(fish, (b) => {
-        b.pos.x -= b.vx + scr;
-        const c = char("a", b.pos).isColliding.char;
-        if (c.a || c.b) {
-            play("explosion");
-            return true;
+    remove(fish, (f) => {
+        //nextfishDist -= scr;
+        f.pos.x -= f.vx + scr;
+        //change what it is colliding later
+        const isBulletCollidingWithFish = char("a", f.pos).isColliding.rect.blue;
+        console.log(isBulletCollidingWithFish);
+
+        if (isBulletCollidingWithFish) {
+              play("hit");
+              color("blue");
+              particle(f.pos);
+              addScore(multiplier, f.pos);
+              multiplier++;
+              return true;
+            }
+
+        const isShipCollidingWithFish = char("a", f.pos).isColliding.char.c || char("a", f.pos).isColliding.char.d;
+        if (isShipCollidingWithFish) {
+          end();
         }
-        return b.pos.x < -3;
+
+        return(isBulletCollidingWithFish || f.pos.x < 0);
     });
-  // remove(shots, (s) => {
-  //   const c = char("e", s).isColliding.char;
-  //   return c.a || c.b;
-  // });
+
+
+
   remove(bombs, (b) => {
     const c = bar(b.pos, 2, 2, b.vel.angle).isColliding.char;
     return c.a || c.b;
   });
-  // fuel = clamp(fuel - difficulty * 0.025, 0, 50);
-  // color("yellow");
-  // text("FUEL", 10, 93);
-  // rect(40, 90, fuel, 6);
-  // color("blue");
-  // rect(40 + fuel, 90, 50 - fuel, 6);
+
 }
